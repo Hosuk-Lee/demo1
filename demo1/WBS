@@ -1,0 +1,44 @@
+WBS
+요구사항확인
+2021-04-30 Eamil 과제확인
+
+분석 & 설계 & 구성
+2021-05-01 노트북 Setup & Start
+           WBS 작성
+2021-05-02 개발환경 구성 & Framework 설정
+           Springboot project 생성 (with gradle)
+           Database
+             Mysql 설치.
+             계정생성 / 권한추가 / Table 설계
+           Springboot - Database - Mybatis 설정
+             datasource
+             transaction
+             Mybatis Config
+             Database Select -> Column Camel Map List
+           Springboot - Controller request
+             Input Data json -> Map
+             service api POST 방식으로 통일
+2021-05-05 설정완료 예정일. (단계말 점검)
+           설정 Upgrade
+             Camel
+           미비된 설정.
+             Git 설정
+                05-06 작업시작
+             swagger-ui 설정
+                05-09 작업시작
+             Mysql Replication
+                05-09 ...
+
+개발
+2021-05-06 개발시작
+2021-05-08 개발완료. (단계말 점검)
+
+테스트
+2021-05-09 테스트 및 미수행사항 점검
+
+배포
+2021-05-12 배포
+
+
+
+             

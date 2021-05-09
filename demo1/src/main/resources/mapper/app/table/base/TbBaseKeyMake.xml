@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+/**
+ *
+ * @Description TB_BASE_KEY_MAKE Mapper
+ * @author 이호석
+ * @since 2021.05.06
+ * @version 1.0
+ *
+ *  수정일       수정자      수정내용
+ *  ==========   ========    ===========================
+ *  2021.05.06   이호석      이호석
+ *
+ *
+ */
+-->
+
+<mapper namespace="app.table.base.tbBaseKeyMake">
+
+    <!-- TB_BASE_KEY_MAKE 조회 -->
+    <select id="doSelect" parameterType="com.app.table.base.model.TbBaseKeyMakeVO" resultType="com.app.table.base.model.TbBaseKeyMakeVO">
+        <![CDATA[
+            SELECT  KEY_CD
+                    ,KEY_TXT
+                    ,SER_NO
+                    ,TBL_NM
+            FROM 	TB_BASE_KEY_MAKE
+            WHERE 	KEY_CD = #{keyCd}
+            AND     KEY_TXT = #{keyTxt}
+        ]]>
+    </select>
+
+    <select id="doSelectForUpdate" parameterType="com.app.table.base.model.TbBaseKeyMakeVO" resultType="com.app.table.base.model.TbBaseKeyMakeVO">
+        <![CDATA[
+            SELECT  KEY_CD
+                    ,KEY_TXT
+                    ,SER_NO
+                    ,TBL_NM
+            FROM 	TB_BASE_KEY_MAKE
+            WHERE 	KEY_CD = #{keyCd}
+            AND     KEY_TXT = #{keyTxt}
+            FOR UPDATE
+        ]]>
+    </select>
+
+    <!-- TB_BASE_KEY_MAKE 생성 -->
+    <insert id="doInsert" parameterType="com.app.table.base.model.TbBaseKeyMakeVO" >
+        <![CDATA[
+            INSERT INTO TB_BASE_KEY_MAKE
+                       ( KEY_CD
+	                    ,KEY_TXT
+	                    ,SER_NO
+	                    ,TBL_NM
+                       )
+                VALUES
+                       ( #{keyCd} 
+                        ,#{keyTxt} 
+                        ,#{serNo}
+                        ,#{tblNm}
+                )
+        ]]>
+    </insert>
+
+    <!-- TB_BASE_KEY_MAKE 수정 -->
+    <update id="doUpdate" parameterType="com.app.table.base.model.TbBaseKeyMakeVO">
+        <![CDATA[
+            UPDATE  TB_BASE_KEY_MAKE
+            SET      KEY_CD   =   #{keyCd}
+                    ,KEY_TXT  =   #{keyTxt}
+                    ,SER_NO   =   #{serNo}
+                    ,TBL_NM   =   #{tblNm}
+            WHERE 	KEY_CD = #{keyCd}
+            AND     KEY_TXT = #{keyTxt}
+        ]]>
+    </update>
+
+    <!-- TB_BASE_KEY_MAKE 삭제 -->
+    <delete id="doDelete" parameterType="com.app.table.base.model.TbBaseKeyMakeVO">
+        <![CDATA[
+            DELETE FROM TB_BASE_KEY_MAKE
+            WHERE 	KEY_CD = #{keyCd}
+            AND     KEY_TXT = #{keyTxt}
+        ]]>
+    </delete>
+
+</mapper>

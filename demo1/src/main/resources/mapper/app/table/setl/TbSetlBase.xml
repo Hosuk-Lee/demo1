@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+/**
+ *
+ * @Description TB_SETL_BASE Mapper
+ * @author 이호석
+ * @since 2021.05.06
+ * @version 1.0
+ *
+ *  수정일       수정자      수정내용
+ *  ==========   ========    ===========================
+ *  2021.05.06   이호석      이호석
+ *
+ *
+ */
+-->
+
+<mapper namespace="app.table.setl.tbSetlBase">
+
+
+    <!-- TB_SETL_BASE 조회 -->
+    <select id="doSelect" parameterType="com.app.table.setl.model.TbSetlBaseVO" resultType="com.app.table.setl.model.TbSetlBaseVO">
+        <![CDATA[
+            SELECT ORD_NO
+                   ,SEL_CUST_NO
+                   ,BUY_CUST_NO
+                   ,PDT_NM
+                   ,STL_DATE
+            FROM   TB_SETL_BASE
+            WHERE  ORD_NO = #{ordNo}
+        ]]>
+    </select>
+
+    <select id="doSelectForUpdate" parameterType="com.app.table.setl.model.TbSetlBaseVO" resultType="com.app.table.setl.model.TbSetlBaseVO">
+        <![CDATA[
+            SELECT ORD_NO
+                   ,SEL_CUST_NO
+                   ,BUY_CUST_NO
+                   ,PDT_NM
+                   ,STL_DATE
+            FROM   TB_SETL_BASE
+            WHERE  ORD_NO = #{ordNo}
+            FOR UPDATE
+        ]]>
+    </select>
+
+    <!-- TB_SETL_BASE 생성 -->
+    <insert id="doInsert" parameterType="com.app.table.setl.model.TbSetlBaseVO" >
+        <![CDATA[
+            INSERT INTO TB_SETL_BASE
+                       ( ORD_NO
+                        ,SEL_CUST_NO
+                        ,BUY_CUST_NO
+                        ,PDT_NM
+                        ,STL_DATE 
+                       )
+                VALUES
+                       ( #{ordNo} 
+                        ,#{selCustNo} 
+                        ,#{buyCustNo}     
+                        ,#{pdtNm}  
+                        ,#{stlDate}  
+                )
+        ]]>
+    </insert>
+
+    <!-- TB_SETL_BASE 수정 -->
+    <update id="doUpdate" parameterType="com.app.table.setl.model.TbSetlBaseVO">
+        <![CDATA[
+            UPDATE  TB_SETL_BASE
+            SET     ORD_NO       =  #{ordNo}    
+                   ,SEL_CUST_NO  =  #{selCustNo}
+                   ,BUY_CUST_NO  =  #{buyCustNo}
+                   ,PDT_NM       =  #{pdtNm}    
+                   ,STL_DATE     =  #{stlDate}  
+            WHERE   ORD_NO = #{ordNo}
+        ]]>
+    </update>
+
+    <!-- TB_SETL_BASE 삭제 -->
+    <delete id="doDelete" parameterType="com.app.table.setl.model.TbSetlBaseVO">
+        <![CDATA[
+            DELETE FROM TB_SETL_BASE
+             WHERE ORD_NO = #{ordNo}
+        ]]>
+    </delete>
+
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+/**
+ *
+ * @Description TB_CUST_BASE Mapper
+ * @author 이호석
+ * @since 2021.05.06
+ * @version 1.0
+ *
+ *  수정일       수정자      수정내용
+ *  ==========   ========    ===========================
+ *  2021.05.06   이호석      이호석
+ *
+ *
+ */
+-->
+
+<mapper namespace="app.table.cust.tbCustBase">
+
+
+    <!-- TB_CUST_BASE 조회 -->
+    <select id="doSelect" parameterType="com.app.table.cust.model.TbCustBaseVO" resultType="com.app.table.cust.model.TbCustBaseVO">
+        <![CDATA[
+	        SELECT    CUST_NO
+                     ,CUST_GB
+                     ,NM     
+                     ,ALIAS  
+                     ,PWD    
+                     ,TEL_NO 
+                     ,EMAIL  
+                     ,SEX    
+	         FROM TB_CUST_BASE
+	        WHERE CUST_NO = #{custNo}
+        ]]>
+    </select>
+
+    <select id="doSelectForUpdate" parameterType="com.app.table.cust.model.TbCustBaseVO" resultType="com.app.table.cust.model.TbCustBaseVO">
+        <![CDATA[
+	        SELECT    CUST_NO
+                     ,CUST_GB
+                     ,NM     
+                     ,ALIAS  
+                     ,PWD    
+                     ,TEL_NO 
+                     ,EMAIL  
+                     ,SEX    
+	         FROM TB_CUST_BASE
+	        WHERE CUST_NO = #{custNo}
+	          FOR UPDATE
+        ]]>
+    </select>
+
+    <!-- TB_CUST_BASE 생성 -->
+    <insert id="doInsert" parameterType="com.app.table.cust.model.TbCustBaseVO" >
+        <![CDATA[
+	        INSERT INTO TB_CUST_BASE
+			           ( CUST_NO
+                        ,CUST_GB
+                        ,NM     
+                        ,ALIAS  
+                        ,PWD    
+                        ,TEL_NO 
+                        ,EMAIL  
+                        ,SEX    
+			           )
+			    VALUES
+			           ( #{custNo} 
+                        ,#{custGb} 
+                        ,#{nm}     
+                        ,#{alias}  
+                        ,#{pwd}  
+                        ,#{telNo}  
+                        ,#{email}  
+                        ,#{sex}    
+	            )
+        ]]>
+    </insert>
+
+    <!-- TB_CUST_BASE 수정 -->
+    <update id="doUpdate" parameterType="com.app.table.cust.model.TbCustBaseVO">
+        <![CDATA[
+	        UPDATE  TB_CUST_BASE
+	        SET     CUST_NO     =  #{custNo}
+                   ,CUST_GB     =  #{custGb}
+                   ,NM          =  #{nm}
+                   ,ALIAS       =  #{alias}
+                   ,PWD         =  #{pwd}
+                   ,TEL_NO      =  #{telNo}
+                   ,EMAIL       =  #{email}
+                   ,SEX         =  #{sex}
+	        WHERE   CUST_NO     =  #custNo}
+        ]]>
+    </update>
+
+    <!-- TB_CUST_BASE 삭제 -->
+    <delete id="doDelete" parameterType="com.app.table.cust.model.TbCustBaseVO">
+        <![CDATA[
+		    DELETE FROM TB_CUST_BASE
+		     WHERE CUST_NO = #{custNo}
+        ]]>
+    </delete>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+/**
+ *
+ * @Description Setl01 Mapper
+ * @author 이호석
+ * @since 2021.05.04
+ * @version 1.0
+ *
+ *  수정일       수정자      수정내용
+ *  ==========   ========    ===========================
+ *  2021.05.04   이호석      이호석
+ *
+ *
+ */
+-->
+
+<mapper namespace="app.setl.Setl01">
+
+
+    <!-- Select Test -->
+    <select id="selectDual" parameterType="java.util.Map" resultType="String">
+        select 1
+    </select>
+
+    <!-- Select List Test -->
+    <select id="listDual" parameterType="java.util.Map" resultType="listMap">
+        <![CDATA[
+        SELECT 1 ONE_ONE, 2 TWO_TWO, 3 THREE_THREE
+        UNION ALL 
+        SELECT 1 ONE_ONE, 2 TWO_TWO, 3 THREE_THREE
+        ]]>
+    </select>
+    
+    <!-- Select List Test -->
+    <!-- 
+       ,STL_DATE
+       ,CONVERT_TZ(STL_DATE,'+0:00','+9:00') KST_STL_DATE 
+     -->
+    <select id="getCustOrdList" parameterType="java.util.Map" resultType="listMap">
+        <![CDATA[
+        SELECT RN, ORD_NO, SEL_CUST_NO, BUY_CUST_NO, PDT_NM
+               ,DATE_FORMAT(STL_DATE,'%Y-%m-%d') STL_DT
+               ,DATE_FORMAT(STL_DATE,'%H:%i%s') STL_TM
+               ,DATE_FORMAT(CONVERT_TZ(STL_DATE,'+0:00','+9:00'),'%Y-%m-%d') KST_STL_DT
+               ,DATE_FORMAT(CONVERT_TZ(STL_DATE,'+0:00','+9:00'),'%H:%i:%s') KST_STL_TM
+        ]]>
+        
+        FROM 
+        (   
+            <![CDATA[
+            SELECT @ROWNUM:=@ROWNUM+1 AS RN
+                   ,A.*
+            FROM TB_SETL_BASE A, 
+                 (SELECT @ROWNUM:=0) R
+            WHERE BUY_CUST_NO = 'ZZ00000002'
+            ]]>
+            <choose>
+	          <when test="order == 'ASC' || order == 'asc'">
+	            ORDER BY ORD_NO ASC
+	          </when>
+	          <when test="order == 'DESC' || order == 'desc'">
+	            ORDER BY ORD_NO DESC
+	          </when>
+	          <otherwise>
+	            ORDER BY ORD_NO ASC
+	          </otherwise>
+	        </choose>
+        ) TB
+        <![CDATA[
+        WHERE 1=1
+        AND   RN >= 1+( #{limit}*(#{page}-1) )
+        AND   RN <= #{page} * #{limit}
+        ]]>
+        
+        
+    </select>
+
+
+    <!-- Select List Test -->
+    <select id="countCustOrdList" parameterType="java.util.Map" resultType="int">
+    	SELECT COUNT(ORD_NO) FROM TB_SETL_BASE
+		WHERE BUY_CUST_NO = 'ZZ00000002'
+    </select>
+</mapper>

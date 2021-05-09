@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="callSettersOnNulls" value="true"/>
+    </settings>
+    
+    <typeAliases>
+        <!-- <typeAlias alias="listMap" type="org.apache.commons.collections4.map.ListOrderedMap"/> -->
+        <typeAlias alias="listMap" type="com.app.base.config.CamelListMap"/>
+    </typeAliases> 
+    
+</configuration>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+/**
+ *
+ * @Description Cust01 Mapper
+ * @author 이호석
+ * @since 2021.05.04
+ * @version 1.0
+ *
+ *  수정일       수정자      수정내용
+ *  ==========   ========    ===========================
+ *  2021.05.04   이호석      이호석
+ *
+ *
+ */
+-->
+
+<mapper namespace="app.cust.Cust01">
+
+    <!-- 고객정보조회 By PK -->
+    <select id="selectCustInfoByCustNo" parameterType="java.util.Map" resultType="listMap">
+        <![CDATA[
+        SELECT  CUST_NO
+                ,CUST_GB
+                ,NM
+                ,ALIAS
+                ,PWD
+                ,TEL_NO
+                ,EMAIL
+                ,SEX
+        FROM    TB_CUST_BASE CUST
+        WHERE   1=1
+        AND     CUST_NO = #{custNo}
+        ]]>
+    </select>
+    
+    <!-- 고객정보조회 By Tell No -->
+    <select id="selectCustInfoByTelNo" parameterType="java.util.Map" resultType="listMap">
+        <![CDATA[
+        SELECT  CUST_NO
+                ,CUST_GB
+                ,NM
+                ,ALIAS
+                ,PWD
+                ,TEL_NO
+                ,EMAIL
+                ,SEX
+        FROM    TB_CUST_BASE CUST
+        WHERE   1=1
+        AND     TEL_NO = #{telNo}
+        ]]>
+    </select>
+    
+    <!-- 고객정보조회 By Email Addr -->
+    <select id="selectCustInfoByEmail" parameterType="java.util.Map" resultType="listMap">
+        <![CDATA[
+        SELECT  CUST_NO
+                ,CUST_GB
+                ,NM
+                ,ALIAS
+                ,PWD
+                ,TEL_NO
+                ,EMAIL
+                ,SEX
+        FROM    TB_CUST_BASE CUST
+        WHERE   1=1
+        AND     EMAIL = #{email}
+        ]]>
+    </select>
+    
+    <!-- 고객목록조회 -->
+    <!-- 요구사항
+        페이지네이션으로 일정 단위로 조회합니다.
+        이름, 이메일을 이용하여 검색 기능이 필요합니다.
+        각 회원의 마지막 주문 정보
+     -->
+     <select id="getCustInfoList" parameterType="java.util.Map" resultType="listMap">
+         SELECT * FROM (
+            SELECT 
+            	<![CDATA[
+                @ROWNUM:=@ROWNUM+1 AS RN
+                ,A.CUST_NO
+                ,IF(A.CUST_GB = '1','개인','기업') AS CUST_GB
+                ,A.NM
+                ,A.ALIAS
+                ,A.TEL_NO
+                ,A.EMAIL
+                ,A.SEX
+                ,B.ORD_NO
+                ,B.PDT_NM
+                ,DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%Y-%m-%d') KST_STL_DT
+                ,DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%H:%i:%s') KST_STL_TM
+                FROM TB_CUST_BASE A
+                LEFT OUTER JOIN 
+                    (
+                        SELECT BA.* FROM 
+                        TB_SETL_BASE BA
+                        ,(
+                            SELECT MAX(ORD_NO) ORD_NO FROM TB_SETL_BASE
+                            GROUP BY BUY_CUST_NO
+                        ) BB
+                        WHERE 1=1
+                        AND BA.ORD_NO = BB.ORD_NO
+                    ) B ON A.CUST_NO = B.BUY_CUST_NO
+                ,(SELECT @ROWNUM:=0) R
+                ]]>
+                WHERE 1=1
+                <if test="nm != null">
+                AND NM LIKE CONCAT('%',#{NM}, ‘%’)
+                </if>
+                <if test="email != null">
+                AND EMAIL LIKE CONCAT(#{email}, ‘%’)
+                </if>
+                ORDER BY CUST_NO DESC
+            ) TB
+         <![CDATA[
+         WHERE 1=1
+         AND   RN >= 1+( #{limit}*(#{page}-1) )
+         AND   RN <= #{page} * #{limit}
+         ]]>
+     </select>
+     
+     <select id="countCustInfoList" parameterType="java.util.Map" resultType="int">
+         SELECT COUNT(ORD_NO) FROM TB_CUST_BASE
+         WHERE 1=1
+         <if test="nm != null">
+         AND NM LIKE CONCAT('%',#{NM}, ‘%’)
+         </if>
+         <if test="email != null">
+         AND EMAIL LIKE CONCAT(#{email}, ‘%’)
+         </if>
+     </select>
+</mapper>
