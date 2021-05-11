@@ -43,7 +43,7 @@
         <![CDATA[
         SELECT RN, ORD_NO, SEL_CUST_NO, BUY_CUST_NO, PDT_NM
                ,DATE_FORMAT(STL_DATE,'%Y-%m-%d') STL_DT
-               ,DATE_FORMAT(STL_DATE,'%H:%i%s') STL_TM
+               ,DATE_FORMAT(STL_DATE,'%H:%i:%s') STL_TM
                ,DATE_FORMAT(CONVERT_TZ(STL_DATE,'+0:00','+9:00'),'%Y-%m-%d') KST_STL_DT
                ,DATE_FORMAT(CONVERT_TZ(STL_DATE,'+0:00','+9:00'),'%H:%i:%s') KST_STL_TM
         ]]>

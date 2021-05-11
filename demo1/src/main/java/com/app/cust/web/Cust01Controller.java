@@ -1,6 +1,8 @@
 package com.app.cust.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -45,156 +47,9 @@ public class Cust01Controller {
     @Resource(name = "cust01Service")
     private Cust01Service cust01Service;
     
-    
-    /**
-     * 회원가입
-     *
-     * @param 
-     * @return 
-     */
-    @ApiOperation(value = "signUp", notes = "회원가입")
-    @PostMapping("/signUp")
-    public @ResponseBody Map<String, Object> signUp(@RequestBody Map<String, Object> inMap) {
-        Map<String, Object> rtnMap = new HashMap<String, Object>();;
-        try {
-            
-            System.out.println("signUp"+inMap);
-            System.out.println("----------------------");
-            System.out.println("1." + MapUtil.getNvlString(inMap.get("nm")    ));
-            System.out.println("2." + MapUtil.getNvlString(inMap.get("alias") ));
-            System.out.println("4." + MapUtil.getNvlString(inMap.get("pwd")));
-            System.out.println("5." + MapUtil.getNvlString(inMap.get("telNo") ));
-            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
-            System.out.println("----------------------");
-            // MapUtil.printLog(inMap);
-            
-            rtnMap = cust01Service.signUp(inMap);
-            
-            rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("msg"    , "회원가입이 완료되었습니다.");
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
-            e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
-            
-        }
-        return rtnMap;
-    }
-    
-    
-    /**
-     * 로그인
-     *
-     * @param pwd
-     * @return resultCode
-     */
-    @PostMapping("/signIn")
-    public @ResponseBody Map<String, Object> signIn(@RequestBody Map<String, Object> inMap) {
-        Map<String, Object> rtnMap = new HashMap<String, Object>();
-        try {
-            
-            System.out.println("signIn"+inMap);
-            System.out.println("----------------------");
-            System.out.println("4." + MapUtil.getNvlString(inMap.get("pwd")));
-            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
-            System.out.println("----------------------");
-            // MapUtil.printLog(inMap);
-            
-            rtnMap = cust01Service.signIn(inMap);
-            
-            rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("msg"    , "로그인성공.");
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
-            e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
-            
-        }
-        return rtnMap;
-    }
-    
-    
-    
-    
-    
-    /**
-     * 
-     * 단일회원조회 사용안함(X)
-     * 
-     */
-//    @PostMapping("/getCustInfo")
-    public @ResponseBody Map<String, Object> custInfoPost(@RequestBody Map<String, Object> inMap) {
-        Map<String, Object> rtnMap = new HashMap<String, Object>();
-        try {
-            
-            System.out.println("getCustInfo"+inMap);
-            System.out.println("----------------------");
-            System.out.println("5." + MapUtil.getNvlString(inMap.get("telNo") ));
-            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
-            System.out.println("----------------------");
-            
-            rtnMap = cust01Service.getCustInfo(inMap);
-        
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
-            e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
-            
-        }
-        return rtnMap;
-    }
-    
-    @GetMapping("/getCustInfo")
-    public @ResponseBody Map<String, Object> custInfoGet(@RequestParam  Map<String, Object> inMap) {
-        Map<String, Object> rtnMap = new HashMap<String, Object>();
-        try {
-            
-            System.out.println("getCustInfo"+inMap);
-            System.out.println("----------------------");
-            System.out.println("5." + MapUtil.getNvlString(inMap.get("telNo") ));
-            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
-            System.out.println("----------------------");
-            
-            rtnMap = cust01Service.getCustInfo(inMap);
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
-            e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
-            
-        }
-        return rtnMap;
-    }
-    
-    
-    @ApiOperation(value = "custInfo", notes = "단일 회원 상세 정보 조회")
+    @ApiOperation(value = "단일 회원 상세 정보 조회(전화번호)", 
+                  notes = "단일 회원 상세 정보 조회\n"
+                          + "- 전화번호로 회원 정보를 검색합니다.")
     @GetMapping("/custInfo/telNo/{telNo}")
     public @ResponseBody Map<String, Object> custInfoGetByTelNo(
             @ApiParam(value = "검색 전화번호", required = true, example = "01099006828") @PathVariable(name="telNo",required = true) String telNo ) {
@@ -231,7 +86,9 @@ public class Cust01Controller {
         return rtnMap;
     }
     
-    @ApiOperation(value = "custInfo", notes = "단일 회원 상세 정보 조회")
+    @ApiOperation(value = "단일 회원 상세 정보 조회 (이메일)",
+                  notes = "단일 회원 상세 정보 조회\n"
+                        + "- 이메일로 회원 정보를 검색합니다.")
     @GetMapping("/custInfo/email/{email}")
     public @ResponseBody Map<String, Object> custInfoGetByEmail(
             @ApiParam(value = "검색 이메일", required = true, example = "MAIL0001@idus.com") @PathVariable(name="email",required = true) String email ) {
@@ -267,11 +124,15 @@ public class Cust01Controller {
         return rtnMap;
     }
     
-    @ApiOperation(value = "custInfoList", notes = "단일 회원 상세 정보 조회")
+    @ApiOperation(value = "여러 회원 목록 조회", 
+                  notes = "단일 회원의 주문 목록 조회\n"
+                        + "- 페이지네이션으로 일정 단위로 조회합니다.\n"
+                        + "- 이름, 이메일을 이용하여 검색 기능이 필요합니다.\n"
+                        + "- 각 회원의 마지막 주문 정보를 출력합니다.\n")
     @GetMapping("/custInfoList")
     public @ResponseBody Map<String, Object> custInfoList(
-            @ApiParam(value = "검색 이름",   required = true, example = "이호석") @RequestParam(name="nm",required = true) String nm,
-            @ApiParam(value = "검색 이메일", required = true, example = "foo@google.com") @RequestParam(name="email",required = true) String email,
+            @ApiParam(value = "검색 이름",   required = true, example = "NAME1") @RequestParam(name="nm",required = true) String nm,
+            @ApiParam(value = "검색 이메일", required = true, example = "MAIL0001@idus.com") @RequestParam(name="email",required = true) String email,
             @ApiParam(value = "회원 목록 시작 페이지(기본값:1)", required = false, example = "1") @RequestParam(name="page",required = true) String page, 
             @ApiParam(value = "한 페이지에 가져올 회원 최대 수(기본값: 10, 최댓값: 50)", required = false, example = "10") @RequestParam(name="limit",required = true) String limit,
             @ApiParam(value = "회원 목록 정렬 순서, 오름차순(\"asc\") 또는 내림차순(\"desc\")(기본값 \"asc\")", required = false, example = "asc") @RequestParam(name="order",required = true) String order )
@@ -280,7 +141,7 @@ public class Cust01Controller {
         Map<String, Object> rtnMap = new HashMap<String, Object>();
         try {
             
-            System.out.println("custInfoGetByEmail");
+            System.out.println("custInfoList");
             System.out.println("----------------------");
             System.out.println("1." + nm    );
             System.out.println("2." + email );
@@ -307,17 +168,81 @@ public class Cust01Controller {
             e.printStackTrace(); // 모니터링을 위한 System Error LOGGING [DB or FILE] 
             
             // 시스템 오류여도 알려주지 않는다.
-            rtnMap= new HashMap<String, Object>();
-            rtnMap.put("custNo", "");
-            rtnMap.put("custGb", "");
-            rtnMap.put("nm"    , "");
-            rtnMap.put("alias" , "");
-            rtnMap.put("telNo" , "");
-            rtnMap.put("email" , "");
-            rtnMap.put("sex"   , "");
+            rtnMap = new HashMap<String, Object>();
+            List<Map<String, Object>> rtnMapList = new ArrayList<Map<String, Object>>();
+            rtnMap.put("elements", rtnMapList);
+            rtnMap.put("total_count", 0);
+            rtnMap.put("previous_url", "");
+            rtnMap.put("next_url", "");
             
         }
         return rtnMap;
     }
     
+    
+    /*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
+    
+    /**
+     * 
+     * 단일회원조회 사용안함(X)
+     * 
+     */
+//    @PostMapping("/getCustInfo")
+    public @ResponseBody Map<String, Object> custInfoPost(@RequestBody Map<String, Object> inMap) {
+        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        try {
+            
+            System.out.println("getCustInfo"+inMap);
+            System.out.println("----------------------");
+            System.out.println("5." + MapUtil.getNvlString(inMap.get("telNo") ));
+            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
+            System.out.println("----------------------");
+            
+            rtnMap = cust01Service.getCustInfo(inMap);
+        
+        } catch (RuntimeException re) {
+            System.out.println("@@ERROR@@" + re.getMessage());
+            re.printStackTrace();
+            rtnMap.put("resultCode", CODE.ERROR);
+            rtnMap.put("resultMsg" , re.getMessage());
+        } 
+        catch (Exception e) {
+            
+            e.printStackTrace();
+            rtnMap.put("resultCode", CODE.ERROR);
+            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
+            
+        }
+        return rtnMap;
+    }
+//    단일회원조회 사용안함(X)
+//    @GetMapping("/getCustInfo")
+    public @ResponseBody Map<String, Object> custInfoGet(@RequestParam  Map<String, Object> inMap) {
+        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        try {
+            
+            System.out.println("getCustInfo"+inMap);
+            System.out.println("----------------------");
+            System.out.println("5." + MapUtil.getNvlString(inMap.get("telNo") ));
+            System.out.println("6." + MapUtil.getNvlString(inMap.get("email") ));
+            System.out.println("----------------------");
+            
+            rtnMap = cust01Service.getCustInfo(inMap);
+        } catch (RuntimeException re) {
+            System.out.println("@@ERROR@@" + re.getMessage());
+            re.printStackTrace();
+            rtnMap.put("resultCode", CODE.ERROR);
+            rtnMap.put("resultMsg" , re.getMessage());
+        } 
+        catch (Exception e) {
+            
+            e.printStackTrace();
+            rtnMap.put("resultCode", CODE.ERROR);
+            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
+            
+        }
+        return rtnMap;
+    }
 }

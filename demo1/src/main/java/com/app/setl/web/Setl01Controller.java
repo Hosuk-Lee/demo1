@@ -8,13 +8,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.base.util.MapUtil;
 import com.app.setl.service.Setl01Service;
 
 import io.swagger.annotations.ApiOperation;
@@ -44,9 +42,12 @@ public class Setl01Controller {
     @Resource(name = "setl01Service")
     private Setl01Service setl01Service;
     
-    @ApiOperation(value = "custOrdList", notes = "단일 회원의 주문 목록 조회")
+    @ApiOperation(value = "custOrdList",
+                  notes = "단일 회원의 주문 목록 조회\n"
+                          + "- 페이지네이션으로 일정 단위로 조회합니다.\n")
     @GetMapping("/custOrdList")
     public @ResponseBody Map<String, Object> custOrdList(
+            @ApiParam(value = "주문 회원 이메일", required = false, example = "MAIL0002@idus.com") @RequestParam(name="email",required = true) String email,
             @ApiParam(value = "회원 주문 목록 시작 페이지(기본값:1)", required = false, example = "1") @RequestParam(name="page",required = true) String page, 
             @ApiParam(value = "한 페이지에 가져올 주문 최대 수(기본값: 10, 최댓값: 50)", required = false, example = "10") @RequestParam(name="limit",required = true) String limit,
             @ApiParam(value = "주문목록 정렬 순서, 오름차순(\"asc\") 또는 내림차순(\"desc\")(기본값 \"asc\")", required = false, example = "asc") @RequestParam(name="order",required = true) String order
@@ -59,10 +60,12 @@ public class Setl01Controller {
             
             System.out.println("getCustInfo"+inMap);
             System.out.println("----------------------");
-            System.out.println("1." + page  );
-            System.out.println("2." + limit );
-            System.out.println("3." + order );
+            System.out.println("1." + email  );
+            System.out.println("2." + page  );
+            System.out.println("3." + limit );
+            System.out.println("4." + order );
             
+            inMap.put("email", email  );
             inMap.put("page" , page   );
             inMap.put("limit", limit  );
             inMap.put("order", order  );

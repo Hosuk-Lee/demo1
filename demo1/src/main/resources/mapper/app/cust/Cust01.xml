@@ -77,7 +77,8 @@
         각 회원의 마지막 주문 정보
      -->
      <select id="getCustInfoList" parameterType="java.util.Map" resultType="listMap">
-         SELECT * FROM (
+         SELECT RN, CUST_NO, CUST_GB, NM, ALIAS, TEL_NO, EMAIL, SEX, ORD_NO, PDT_NM, KST_STL_DT, KST_STL_TM
+         FROM (
             SELECT 
             	<![CDATA[
                 @ROWNUM:=@ROWNUM+1 AS RN
@@ -107,12 +108,12 @@
                 ,(SELECT @ROWNUM:=0) R
                 ]]>
                 WHERE 1=1
-                <if test="nm != null">
-                AND NM LIKE CONCAT('%',#{NM}, ‘%’)
-                </if>
-                <if test="email != null">
-                AND EMAIL LIKE CONCAT(#{email}, ‘%’)
-                </if>
+                <if test="nm != null and nm != ''">
+                 AND NM LIKE CONCAT('%',#{nm}, '%')
+                 </if>
+                 <if test="email != null and email != ''">
+                 AND EMAIL LIKE CONCAT(#{email}, '%')
+                 </if>
                 ORDER BY CUST_NO DESC
             ) TB
          <![CDATA[
@@ -123,13 +124,13 @@
      </select>
      
      <select id="countCustInfoList" parameterType="java.util.Map" resultType="int">
-         SELECT COUNT(ORD_NO) FROM TB_CUST_BASE
+         SELECT COUNT(CUST_NO) FROM TB_CUST_BASE
          WHERE 1=1
-         <if test="nm != null">
-         AND NM LIKE CONCAT('%',#{NM}, ‘%’)
+         <if test="nm != null and nm != ''">
+         AND NM LIKE CONCAT('%',#{nm}, '%')
          </if>
-         <if test="email != null">
-         AND EMAIL LIKE CONCAT(#{email}, ‘%’)
+         <if test="email != null and email != ''">
+         AND EMAIL LIKE CONCAT(#{email}, '%')
          </if>
      </select>
 </mapper>

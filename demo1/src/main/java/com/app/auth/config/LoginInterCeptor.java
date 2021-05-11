@@ -11,12 +11,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.app.auth.model.UserToken;
 import com.app.auth.util.AuthCookieUtil;
 
 @Component
 public class LoginInterCeptor implements HandlerInterceptor {
     
-    public static final String SESSION_ID = "SessionID";
+    // Session 검증
+    // public static final String SESSION_ID = "SessionID";
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -24,27 +26,30 @@ public class LoginInterCeptor implements HandlerInterceptor {
         /* preHandle : Controller가 호출되기 전 수행 */
         
         /* print request header */
-        Enumeration<String>  e = request.getHeaderNames();
-        while (e.hasMoreElements()) {
-            String string = (String) e.nextElement();
-            System.out.println("request header:"+string);
-            
-        }
+        // Enumeration<String>  e = request.getHeaderNames();
+        // while (e.hasMoreElements()) {
+        //     String string = (String) e.nextElement();
+        //     System.out.println("request header:"+string);
+        // }
 
         // Access 토큰이 필요한 경우 여기로 오게 된다.
-        AuthCookieUtil.validAuthCookie(request);
+        UserToken userToken = AuthCookieUtil.getUserTocken(request);
+        if ( userToken == null ) {
+            response.sendError(401);
+            return false; 
+        }
         
         
+        // Session 검증
         // HttpSession httpSession = request.getSession();
         // String sessionItem = (String)httpSession.getAttribute(SESSION_ID);
         //if ( sessionItem == null ) {
         //    response.sendError(401);
-        //    // throw new AuthorizationException();
         //    return false;
         //    
         //}
         
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
     
     @Override

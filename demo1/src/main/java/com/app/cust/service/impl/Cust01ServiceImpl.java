@@ -177,6 +177,13 @@ public class Cust01ServiceImpl  implements Cust01Service{
         return rtnMap;
     }
 
+    @Override
+    public Map<String, Object> logout(Map<String, Object> inMap) throws Exception {
+        // TODO Auto-generated method stub
+        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        // 로그아웃처리 
+        return rtnMap;
+    }
     
     @Override
     public Map<String, Object> getCustInfo(Map<String, Object> inMap) throws Exception {
@@ -247,8 +254,8 @@ public class Cust01ServiceImpl  implements Cust01Service{
         /* 회원 목록 조회 */
         System.out.println("IMPL:getCustOrdList");
         
-        String nm    = "";
-        String email = "";
+        String nm    = MapUtil.getNvlString(inMap.get("nm"));
+        String email = MapUtil.getNvlString(inMap.get("email"));
         int    page  = 1;      // default : 첫페이지 '1'
         int    limit = 10;     // default : '10'건
         String order = "ASC";  // default : ASC
@@ -269,20 +276,20 @@ public class Cust01ServiceImpl  implements Cust01Service{
             order = MapUtil.getNvlString(inMap.get("order")) ;
         }
         
-        inMap.put("nm"   , nm      );
-        inMap.put("email", email   );
-        inMap.put("page" , page    );
-        inMap.put("limit", limit   );
-        inMap.put("order", order   );
+        searchMap.put("nm"   , nm      );
+        searchMap.put("email", email   );
+        searchMap.put("page" , page    );
+        searchMap.put("limit", limit   );
+        searchMap.put("order", order   );
         
         /*-----------------------------------------------------------------*/
         // 정합성검증
         
         // limit 50건 이상
         /*-----------------------------------------------------------------*/
-        
+        System.out.println("serchMap" + searchMap);
         ordCount = cust01DAO.countCustInfoList(searchMap);
-        System.out.println("countCustOrdList" + ordCount);
+        System.out.println("countCustInfoList" + ordCount);
         if ( ordCount == 0 ) {
             rtnMapList = new ArrayList<Map<String, Object>>();
             rtnMap.put("elements", rtnMapList);
@@ -292,7 +299,7 @@ public class Cust01ServiceImpl  implements Cust01Service{
         } else {
             rtnMapList = cust01DAO.getCustInfoList(searchMap);
             System.out.println(searchMap);
-            System.out.println("countCustOrdList" + rtnMapList.size());
+            System.out.println("getCustInfoList:" + rtnMapList.size());
             if ( rtnMapList.size() == 0 ) {
                 // @TODO 추후 개선.
                 throw new RuntimeException("API Rule 위배. 비정상적인 조회접근");
@@ -302,12 +309,12 @@ public class Cust01ServiceImpl  implements Cust01Service{
             // 이전PAGE 여부
             if ( MapUtil.getInt(inMap.get("page")) <= 1 ) { rtnMap.put("previous_url", ""); }
             else {
-                rtnPreviousUrl = "/api/setlSvc/custOrdList?page="+(page-1)+"&limit="+limit+"&order="+order;
+                rtnPreviousUrl = "/api/custSvc/custInfoList?page="+(page-1)+"&limit="+limit+"&order="+order;
                 rtnMap.put("previous_url", rtnPreviousUrl);
             }
             if ( ordCount <= page*limit ) { rtnMap.put("next_url", ""); }
             else {
-                rtnNextUrl = "/api/setlSvc/custOrdList?page="+(page+1)+"&limit="+limit+"&order="+order;
+                rtnNextUrl = "/api/custSvc/custInfoList?page="+(page+1)+"&limit="+limit+"&order="+order;
                 rtnMap.put("next_url", rtnNextUrl);
             }
             

@@ -17,11 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.app.auth.model.UserToken;
 import com.app.base.util.CODE;
+import com.app.base.util.DateUtil;
+import com.app.base.util.StringUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AuthCookieUtil {
-    
     
     public static final String AUTH_COOKIE_KEY = "d-auth";
     // hash 알고리즘 선택
@@ -33,47 +34,135 @@ public class AuthCookieUtil {
         
 //        ObjectMapper objectMapper = new ObjectMapper();
 //        String jsonData = objectMapper.writeValueAsString(user);
+        
+        user.setIssued_at ( String.valueOf( DateUtil.getTimeInMillis() ));
+        user.setExpires_at( String.valueOf( DateUtil.addTimeInMillis(3 * 60) ));
+        
         String jwtString = makeJWT(user);
         Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, jwtString);
         
-        authCookie.setMaxAge(10 * 60); // 10 * 60 10분
+        authCookie.setMaxAge(3 * 60); // 10 * 60 10분
         authCookie.setPath("/"); // 모든 경로에서 접근 가능 하도록 설정
+        authCookie.setHttpOnly(true);
+        
         response.addCookie(authCookie);
         
     }
     
-    public static void deleteAuthCookie(HttpServletResponse response, UserToken user) throws JsonProcessingException, UnsupportedEncodingException {
+    public static void deleteAuthCookie(HttpServletResponse response) throws JsonProcessingException, UnsupportedEncodingException {
         
         // 특정 쿠키만 삭제하기
+        System.out.println("METHOD:deleteAuthCookie");
         Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, null) ;
         authCookie.setMaxAge(0) ;
         response.addCookie(authCookie) ;
     }
     
-    public static boolean validAuthCookie(HttpServletRequest request) {
+    private static boolean validAuthCookie(String jwt) {
+        System.out.println("METHOD:validAuthCookie");
+        String data[] = jwt.split("\\.");
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append(data[0]);
+        sb.append(".");
+        sb.append(data[1]);
+        
+        // Signature
+        String signature = hget(sb.toString());
+        // System.out.println("Signature : " + signature);
+        // System.out.println("Token:" + data[2]);
+        
+        if ( signature.equals(data[2]) == false ) return false;
+        
+        return true;
+    }
+    
+    public static UserToken getUserTocken(HttpServletRequest request) {
+        System.out.println("METHOD:getUserTocken");
+        UserToken user = null;
+
+        try {
+        
         String jwt = "";
         Cookie[] cookies = request.getCookies();
         
         // 쿠키목록 중 인증서 데이터 찾기
+        if ( cookies == null ) {
+            throw new Exception("Cookie 없음 오류");
+        } 
+        
         for(Cookie cookie : cookies) {
             if(cookie.getName().equals(AUTH_COOKIE_KEY)){
                 jwt = cookie.getValue();
+                // System.out.println(cookie.getMaxAge());
                 break;
             }
         }
+        
+        if ( jwt == null ) throw new Exception("Tocken 없음 오류");
+        
+        String data[] = jwt.split("\\.");
         System.out.println("jwt cookie data:"+jwt);
-
-        return true;
+        // System.out.println(jwt.split(".").length);
+        // System.out.println("1:" + data[0]);
+        // System.out.println("2:" + data[1]);
+        // System.out.println("3:" + data[2]);
+        
+        if ( validAuthCookie(jwt) == false ) throw new Exception("Tocken 검증 오류");
+        
+        System.out.println(decode(data[1]));
+        
+        ObjectMapper objectMapper = new ObjectMapper();
+        user = objectMapper.readValue(decode(data[1]), UserToken.class);
+        
+//        Map<String, String> map = mapper.readValue(json, Map.class);
+//
+//        Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
+        
+        System.out.println(user.getExpires_at());
+        System.out.println(user.getIssued_at());
+        
+        if ( DateUtil.getTimeInMillis() > StringUtil.parseLong(user.getExpires_at()) ) 
+            throw new Exception("Tocken 유효기간 만료");
+        
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return user;
     }
     
     private static String encode(String data) throws UnsupportedEncodingException {
         
         Encoder encoder = Base64.getUrlEncoder();
         
-        byte[] dataBytes = encoder.encode(data.getBytes(CODE.DEFAULT_CHARSET));
-        String rtnString = encoder.encodeToString(dataBytes);
+        String rtnString = encoder.encodeToString(data.getBytes(CODE.DEFAULT_CHARSET));
         System.out.println(rtnString);
+        
+/* 참고
+        System.out.println("DEBUG DECODE----1");
+        byte[] targetBytes = data.getBytes("UTF-8");
 
+        // Encoder#encode(byte[] src) :: 바이트배열로 반환
+        byte[] encodedBytes = encoder.encode(targetBytes);
+        System.out.println(new String(encodedBytes));
+        
+        // Encoder#encodeToString(byte[] src) :: 문자열로 반환
+        String encodedString = encoder.encodeToString(targetBytes);
+        System.out.println(encodedString);
+        
+        // Base64 디코딩 ///////////////////////////////////////////////////
+        Decoder decoder = Base64.getUrlDecoder();
+        
+        // Decoder#decode(bytes[] src) 
+        byte[] decodedBytes1 = decoder.decode(encodedBytes);
+        // Decoder#decode(String src)
+        byte[] decodedBytes2 = decoder.decode(encodedString);
+        // 디코딩한 문자열을 표시
+        String decodedString = new String(decodedBytes1, "UTF-8");
+        System.out.println(decodedString);
+        System.out.println(new String(decodedBytes2, "UTF-8"));
+*/
         return rtnString;
 
     }
@@ -81,14 +170,10 @@ public class AuthCookieUtil {
     private static String decode(String data) throws UnsupportedEncodingException {
         
         Decoder decoder = Base64.getUrlDecoder();
-        
-        byte[] dataBytes = decoder.decode(data);
+        byte[] dataBytes = decoder.decode(data.getBytes(CODE.DEFAULT_CHARSET));
         String rtnString = new String(dataBytes,CODE.DEFAULT_CHARSET);
-        System.out.println(rtnString);
-
         return rtnString;
         
-
     }
     
     // JWT 양식 저장

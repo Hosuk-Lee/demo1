@@ -58,11 +58,11 @@ public class Cust01DAO extends AbstractMapper {
     }
 
     public List<Map<String, Object>> getCustInfoList(Map<String, Object> inMap) {
-        return selectList("app.setl.Cust01.getCustInfoList", inMap);
+        return selectList("app.cust.Cust01.getCustInfoList", inMap);
     }
 
     public int countCustInfoList(Map<String, Object> inMap) {
-        return selectOne("app.setl.Setl01.countCustInfoList", inMap);
+        return selectOne("app.cust.Cust01.countCustInfoList", inMap);
     }
 	
   

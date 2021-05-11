@@ -1,6 +1,8 @@
 package com.app.base.util;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -169,6 +171,25 @@ public class MapUtil {
             // log.debug(records.toString());
         	System.out.println(records.toString());
         }
+    }
+    
+    /**
+    * Vo를 Map으로 변환
+    * @param obj
+    * @return
+    */
+    public static Map<String,Object> convertObjectToMap(Object obj){
+        Map<String,Object> map = new HashMap<String,Object>();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for(int i=0; i <fields.length; i++){
+            fields[i].setAccessible(true);
+            try{
+                map.put(fields[i].getName(), fields[i].get(obj));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return map;
     }
 
 }

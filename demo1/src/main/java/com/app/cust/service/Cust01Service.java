@@ -9,6 +9,9 @@ public interface Cust01Service  {
 	
 	/* 로그인 */
 	public Map<String, Object> signIn(Map<String, Object> inMap) throws Exception;
+
+	/* 로그아웃 */
+	public Map<String, Object> logout(Map<String, Object> inMap) throws Exception;
 	
 	/* 단일 회원의 주문 목록 조회 */
     public Map<String, Object> getCustInfo(Map<String, Object> inMap) throws Exception;
