@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebServiceConfig implements WebMvcConfigurer{
 
     @Autowired
-    LoginInterCeptor loginInterceptor;
+    AuthInterCeptor authInterceptor;
     
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -22,7 +22,7 @@ public class WebServiceConfig implements WebMvcConfigurer{
                                      "/swagger-ui.html*"
                                    };
         
-        registry.addInterceptor(loginInterceptor)
+        registry.addInterceptor(authInterceptor)
                 .excludePathPatterns(excludePatterns)
                 .addPathPatterns("/api/**");
                 

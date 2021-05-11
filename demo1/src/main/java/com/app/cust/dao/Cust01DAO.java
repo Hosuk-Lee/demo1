@@ -64,6 +64,10 @@ public class Cust01DAO extends AbstractMapper {
     public int countCustInfoList(Map<String, Object> inMap) {
         return selectOne("app.cust.Cust01.countCustInfoList", inMap);
     }
+
+    public int countCustInfoEmail(Map<String, Object> inMap) {
+        return selectOne("app.cust.Cust01.countCustInfoEmail", inMap);
+    }
 	
   
 }

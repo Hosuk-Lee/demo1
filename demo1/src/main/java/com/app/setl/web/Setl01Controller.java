@@ -17,6 +17,8 @@ import com.app.setl.service.Setl01Service;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
 *
@@ -45,6 +47,12 @@ public class Setl01Controller {
     @ApiOperation(value = "custOrdList",
                   notes = "단일 회원의 주문 목록 조회\n"
                           + "- 페이지네이션으로 일정 단위로 조회합니다.\n")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = SetlResMessage.custOrdList_200),
+        @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+        @ApiResponse(code = 500, message = "서버 오류"),
+
+    })
     @GetMapping("/custOrdList")
     public @ResponseBody Map<String, Object> custOrdList(
             @ApiParam(value = "주문 회원 이메일", required = false, example = "MAIL0002@idus.com") @RequestParam(name="email",required = true) String email,

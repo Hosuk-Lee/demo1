@@ -23,13 +23,17 @@
     <select id="selectCustInfoByCustNo" parameterType="java.util.Map" resultType="listMap">
         <![CDATA[
         SELECT  CUST_NO
-                ,CUST_GB
+                ,IF(CUST_GB = '1','개인','기업') AS CUST_GB
                 ,NM
                 ,ALIAS
                 ,PWD
                 ,TEL_NO
                 ,EMAIL
-                ,SEX
+                ,CASE SEX
+                    WHEN 'M'  THEN '남성'
+                    WHEN 'W'  THEN '여성'
+                    WHEN ''   THEN ''
+                END AS SEX
         FROM    TB_CUST_BASE CUST
         WHERE   1=1
         AND     CUST_NO = #{custNo}
@@ -40,13 +44,17 @@
     <select id="selectCustInfoByTelNo" parameterType="java.util.Map" resultType="listMap">
         <![CDATA[
         SELECT  CUST_NO
-                ,CUST_GB
+                ,IF(CUST_GB = '1','개인','기업') AS CUST_GB
                 ,NM
                 ,ALIAS
                 ,PWD
                 ,TEL_NO
                 ,EMAIL
-                ,SEX
+                ,CASE SEX
+                    WHEN 'M'  THEN '남성'
+                    WHEN 'W'  THEN '여성'
+                    WHEN ''   THEN ''
+                END AS SEX
         FROM    TB_CUST_BASE CUST
         WHERE   1=1
         AND     TEL_NO = #{telNo}
@@ -57,13 +65,17 @@
     <select id="selectCustInfoByEmail" parameterType="java.util.Map" resultType="listMap">
         <![CDATA[
         SELECT  CUST_NO
-                ,CUST_GB
+                ,IF(CUST_GB = '1','개인','기업') AS CUST_GB
                 ,NM
                 ,ALIAS
                 ,PWD
                 ,TEL_NO
                 ,EMAIL
-                ,SEX
+                ,CASE SEX
+                    WHEN 'M'  THEN '남성'
+                    WHEN 'W'  THEN '여성'
+                    WHEN ''   THEN ''
+                END AS SEX
         FROM    TB_CUST_BASE CUST
         WHERE   1=1
         AND     EMAIL = #{email}
@@ -77,10 +89,11 @@
         각 회원의 마지막 주문 정보
      -->
      <select id="getCustInfoList" parameterType="java.util.Map" resultType="listMap">
-         SELECT RN, CUST_NO, CUST_GB, NM, ALIAS, TEL_NO, EMAIL, SEX, ORD_NO, PDT_NM, KST_STL_DT, KST_STL_TM
+         SELECT CONCAT(RN) AS RN,
+                CUST_NO, CUST_GB, NM, ALIAS, TEL_NO, EMAIL, SEX, ORD_NO, PDT_NM, KST_STL_DT, KST_STL_TM
          FROM (
             SELECT 
-            	<![CDATA[
+                <![CDATA[
                 @ROWNUM:=@ROWNUM+1 AS RN
                 ,A.CUST_NO
                 ,IF(A.CUST_GB = '1','개인','기업') AS CUST_GB
@@ -114,7 +127,18 @@
                  <if test="email != null and email != ''">
                  AND EMAIL LIKE CONCAT(#{email}, '%')
                  </if>
-                ORDER BY CUST_NO DESC
+                 <choose>
+                   <when test="order == 'ASC' || order == 'asc'">
+                     ORDER BY CUST_NO ASC
+                   </when>
+                   <when test="order == 'DESC' || order == 'desc'">
+                     ORDER BY CUST_NO DESC
+                   </when>
+                   <otherwise>
+                     ORDER BY CUST_NO ASC
+                   </otherwise>
+                 </choose>
+                
             ) TB
          <![CDATA[
          WHERE 1=1
@@ -132,5 +156,11 @@
          <if test="email != null and email != ''">
          AND EMAIL LIKE CONCAT(#{email}, '%')
          </if>
+     </select>
+     
+     <select id="countCustInfoEmail" parameterType="java.util.Map" resultType="int">
+         SELECT COUNT(CUST_NO) FROM TB_CUST_BASE
+         WHERE  1=1
+         AND    EMAIL = #{email}
      </select>
 </mapper>

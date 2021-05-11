@@ -40,7 +40,7 @@ public class Setl01ServiceImpl  implements Setl01Service{
         Map<String, Object> searchMap = new HashMap<String, Object>();
         if ( MapUtil.getInt(inMap.get("page")) != 0 )  {
             page  = MapUtil.getInt(inMap.get("page"));
-        } else 
+        } 
         
         if ( MapUtil.getInt(inMap.get("limit")) != 0 ) {
             limit =  MapUtil.getInt(inMap.get("limit"));

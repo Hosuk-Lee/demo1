@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.base.util.CODE;
 import com.app.base.util.MapUtil;
 import com.app.cust.service.Cust01Service;
+import com.app.setl.web.SetlResMessage;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
 *
@@ -50,9 +53,15 @@ public class Cust01Controller {
     @ApiOperation(value = "단일 회원 상세 정보 조회(전화번호)", 
                   notes = "단일 회원 상세 정보 조회\n"
                           + "- 전화번호로 회원 정보를 검색합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = CustResMessage.custInfo_200),
+        @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+        @ApiResponse(code = 500, message = "서버 오류"),
+
+    })
     @GetMapping("/custInfo/telNo/{telNo}")
     public @ResponseBody Map<String, Object> custInfoGetByTelNo(
-            @ApiParam(value = "검색 전화번호", required = true, example = "01099006828") @PathVariable(name="telNo",required = true) String telNo ) {
+            @ApiParam(value = "검색 전화번호", required = true, example = "01099990001") @PathVariable(name="telNo",required = true) String telNo ) {
         Map<String, Object> inMap = new HashMap<String, Object>();
         Map<String, Object> rtnMap = new HashMap<String, Object>();
         try {
@@ -89,6 +98,11 @@ public class Cust01Controller {
     @ApiOperation(value = "단일 회원 상세 정보 조회 (이메일)",
                   notes = "단일 회원 상세 정보 조회\n"
                         + "- 이메일로 회원 정보를 검색합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = CustResMessage.custInfo_200),
+            @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+    })
     @GetMapping("/custInfo/email/{email}")
     public @ResponseBody Map<String, Object> custInfoGetByEmail(
             @ApiParam(value = "검색 이메일", required = true, example = "MAIL0001@idus.com") @PathVariable(name="email",required = true) String email ) {
@@ -129,10 +143,15 @@ public class Cust01Controller {
                         + "- 페이지네이션으로 일정 단위로 조회합니다.\n"
                         + "- 이름, 이메일을 이용하여 검색 기능이 필요합니다.\n"
                         + "- 각 회원의 마지막 주문 정보를 출력합니다.\n")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = CustResMessage.custInfoList_200),
+        @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+        @ApiResponse(code = 500, message = "서버 오류"),
+    })
     @GetMapping("/custInfoList")
     public @ResponseBody Map<String, Object> custInfoList(
-            @ApiParam(value = "검색 이름",   required = true, example = "NAME1") @RequestParam(name="nm",required = true) String nm,
-            @ApiParam(value = "검색 이메일", required = true, example = "MAIL0001@idus.com") @RequestParam(name="email",required = true) String email,
+            @ApiParam(value = "검색 이름 (LIKE 조건)",   required = false, example = "NAME1") @RequestParam(name="nm",required = false) String nm,
+            @ApiParam(value = "검색 이메일 (LIKE 조건)", required = false, example = "MAIL0001@idus.com") @RequestParam(name="email",required = false) String email,
             @ApiParam(value = "회원 목록 시작 페이지(기본값:1)", required = false, example = "1") @RequestParam(name="page",required = true) String page, 
             @ApiParam(value = "한 페이지에 가져올 회원 최대 수(기본값: 10, 최댓값: 50)", required = false, example = "10") @RequestParam(name="limit",required = true) String limit,
             @ApiParam(value = "회원 목록 정렬 순서, 오름차순(\"asc\") 또는 내림차순(\"desc\")(기본값 \"asc\")", required = false, example = "asc") @RequestParam(name="order",required = true) String order )
@@ -180,6 +199,12 @@ public class Cust01Controller {
     }
     
     
+    
+    
+    
+    
+    
+    
     /*------------------------------------------------------------------------------------------*/
     /*------------------------------------------------------------------------------------------*/
     /*------------------------------------------------------------------------------------------*/
@@ -217,6 +242,9 @@ public class Cust01Controller {
         }
         return rtnMap;
     }
+
+
+// ------------------------------------------------------------------------------------------------------
 //    단일회원조회 사용안함(X)
 //    @GetMapping("/getCustInfo")
     public @ResponseBody Map<String, Object> custInfoGet(@RequestParam  Map<String, Object> inMap) {

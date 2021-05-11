@@ -24,6 +24,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AuthCookieUtil {
     
+    // Tocken 만료시간
+    public static final int LIMIT_MINUTE = 5 * 60; // 5분
+    
     public static final String AUTH_COOKIE_KEY = "d-auth";
     // hash 알고리즘 선택
     private static final String ALGOLISM = "HmacSHA256";
@@ -32,16 +35,15 @@ public class AuthCookieUtil {
     
     public static void addAuthCookie(HttpServletResponse response, UserToken user) throws JsonProcessingException, UnsupportedEncodingException {
         
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonData = objectMapper.writeValueAsString(user);
         
         user.setIssued_at ( String.valueOf( DateUtil.getTimeInMillis() ));
-        user.setExpires_at( String.valueOf( DateUtil.addTimeInMillis(3 * 60) ));
+        user.setExpires_at( String.valueOf( DateUtil.addTimeInMillis(LIMIT_MINUTE) ));
         
         String jwtString = makeJWT(user);
         Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, jwtString);
         
-        authCookie.setMaxAge(3 * 60); // 10 * 60 10분
+        
+        authCookie.setMaxAge(LIMIT_MINUTE);
         authCookie.setPath("/"); // 모든 경로에서 접근 가능 하도록 설정
         authCookie.setHttpOnly(true);
         
@@ -51,7 +53,7 @@ public class AuthCookieUtil {
     
     public static void deleteAuthCookie(HttpServletResponse response) throws JsonProcessingException, UnsupportedEncodingException {
         
-        // 특정 쿠키만 삭제하기
+        // AUTH_COOKIE_KEY 쿠키만 초기화
         System.out.println("METHOD:deleteAuthCookie");
         Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, null) ;
         authCookie.setMaxAge(0) ;
@@ -69,8 +71,6 @@ public class AuthCookieUtil {
         
         // Signature
         String signature = hget(sb.toString());
-        // System.out.println("Signature : " + signature);
-        // System.out.println("Token:" + data[2]);
         
         if ( signature.equals(data[2]) == false ) return false;
         
@@ -116,18 +116,22 @@ public class AuthCookieUtil {
         user = objectMapper.readValue(decode(data[1]), UserToken.class);
         
 //        Map<String, String> map = mapper.readValue(json, Map.class);
-//
 //        Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
         
         System.out.println(user.getExpires_at());
         System.out.println(user.getIssued_at());
         
-        if ( DateUtil.getTimeInMillis() > StringUtil.parseLong(user.getExpires_at()) ) 
+        System.out.println("현재접속시간 : " + DateUtil.millisToDate(DateUtil.getTimeInMillis()));
+        System.out.println("토큰만료시간 : " + DateUtil.millisToDate(StringUtil.parseLong(user.getExpires_at())));
+        // 현재시간보다 토큰만료시간이 지나면 오류
+        if ( DateUtil.getTimeInMillis() > StringUtil.parseLong(user.getExpires_at()) )
             throw new Exception("Tocken 유효기간 만료");
         
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            
+            user = null;
         }
         return user;
     }

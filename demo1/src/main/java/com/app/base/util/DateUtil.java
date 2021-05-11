@@ -9,7 +9,6 @@ public class DateUtil {
     public static long getTimeInMillis () {
         Calendar cal = Calendar.getInstance ();
         return cal.getTimeInMillis();
-        
     }
     
     public static long addTimeInMillis (int second) {
@@ -17,6 +16,13 @@ public class DateUtil {
         cal.add(Calendar.SECOND, second);
         return cal.getTimeInMillis();
         
+    }
+    
+    public static Date millisToDate(long millis) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        Date date = cal.getTime();
+        return date;
     }
     
 }

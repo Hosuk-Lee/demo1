@@ -93,6 +93,13 @@ public class Cust01ServiceImpl  implements Cust01Service{
         }
         // 정합성 검증 END
         /*------------------------------------------------------------------------------*/
+        // 이메일 중복검사
+        int emailDupCheck = cust01DAO.countCustInfoEmail(inMap);
+        if ( emailDupCheck > 0 ) {
+            throw new RuntimeException("가입된 이메일 존재.");
+        }
+        
+        /*------------------------------------------------------------------------------*/
         
         // 고객번호 KEY 생성
         // @TODO I1:개인, C1:사업자, F1:외국인...
@@ -266,7 +273,7 @@ public class Cust01ServiceImpl  implements Cust01Service{
         Map<String, Object> searchMap = new HashMap<String, Object>();
         if ( MapUtil.getInt(inMap.get("page")) != 0 )  {
             page  = MapUtil.getInt(inMap.get("page"));
-        } else 
+        }
         
         if ( MapUtil.getInt(inMap.get("limit")) != 0 ) {
             limit =  MapUtil.getInt(inMap.get("limit"));

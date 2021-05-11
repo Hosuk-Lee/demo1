@@ -11,14 +11,13 @@ public class UserSignUp  {
     @ApiModelProperty(value = "별명", required = true, example = "영문 소문자만 허용")
     private String alias        = "";
     @ApiModelProperty(value = "비밀번호", required = true, example = "영문 대문자, 영문 소문자, 특수 문자, 숫자 각 1개 이상씩 포함")
-    private String password     = "";
+    private String pwd     = "";
     @ApiModelProperty(value = "전화번호", required = true, example = "숫자 ex. 01099426828")
-    private String phone_number = "";
+    private String telNo = "";
     @ApiModelProperty(value = "이메일", required = true, example = "이메일 형식")
     private String email        = "";
     @ApiModelProperty(value = "성멸", required = false, example = "성별 (남자:M, 여자W)")
     private String sex          = "";
-    
     public String getNm() {
         return nm;
     }
@@ -31,17 +30,17 @@ public class UserSignUp  {
     public void setAlias(String alias) {
         this.alias = alias;
     }
-    public String getPassword() {
-        return password;
+    public String getPwd() {
+        return pwd;
     }
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
     }
-    public String getPhone_number() {
-        return phone_number;
+    public String getTelNo() {
+        return telNo;
     }
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setTelNo(String telNo) {
+        this.telNo = telNo;
     }
     public String getEmail() {
         return email;
@@ -55,7 +54,6 @@ public class UserSignUp  {
     public void setSex(String sex) {
         this.sex = sex;
     }
-    
     
     
 }

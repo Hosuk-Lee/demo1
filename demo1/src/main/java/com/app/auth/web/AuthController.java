@@ -44,7 +44,7 @@ public class AuthController {
     
     @ApiOperation(value = "회원가입", notes = "회원가입")
     @PostMapping("/signUp")
-    public @ResponseBody ResponseEntity<UserSignUp> signUp(@RequestBody UserSignUp user) {
+    public @ResponseBody Map<String, Object> signUp(@RequestBody UserSignUp user) {
         Map<String, Object> rtnMap = new HashMap<String, Object>();
         try {
             
@@ -52,33 +52,35 @@ public class AuthController {
             System.out.println("----------------------------");
             System.out.println("1." + user.getNm()           );
             System.out.println("2." + user.getAlias()        );
-            System.out.println("3." + user.getPassword()     );
-            System.out.println("4." + user.getPhone_number() );
+            System.out.println("3." + user.getPwd()          );
+            System.out.println("4." + user.getTelNo()        );
             System.out.println("5." + user.getEmail()        );
             System.out.println("6." + user.getSex()          );
             System.out.println("----------------------------");
             // MapUtil.printLog(inMap);
             
             System.out.println(MapUtil.convertObjectToMap(user));
+            Map<String, Object> inMap = new HashMap<String, Object>();
             rtnMap = cust01Service.signUp(MapUtil.convertObjectToMap(user));
             
+            
             rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("msg"    , "회원가입이 완료되었습니다.");
+            rtnMap.put("message"    , "회원가입이 완료되었습니다.");
         } catch (RuntimeException re) {
             System.out.println("@@ERROR@@" + re.getMessage());
             re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , re.getMessage());
         } 
         catch (Exception e) {
             
             e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);
             
         }
 
-        return new ResponseEntity<UserSignUp>(HttpStatus.OK);
+        return rtnMap;
 
     }
     
@@ -114,14 +116,14 @@ public class AuthController {
         } catch (RuntimeException re) {
             System.out.println("@@ERROR@@" + re.getMessage());
             re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , re.getMessage());
         } 
         catch (Exception e) {
             
             e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);
             
         }
         return rtnMap;
@@ -153,14 +155,14 @@ public class AuthController {
         } catch (RuntimeException re) {
             System.out.println("@@ERROR@@" + re.getMessage());
             re.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , re.getMessage());
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , re.getMessage());
         } 
         catch (Exception e) {
             
             e.printStackTrace();
-            rtnMap.put("resultCode", CODE.ERROR);
-            rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);
             
         }
         return rtnMap;
