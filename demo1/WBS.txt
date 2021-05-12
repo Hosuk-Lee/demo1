@@ -37,10 +37,11 @@ WBS
 2021-05-09 테스트 및 미수행사항 점검
 
 2021-05-12 추후 Framwork 개선사항
-           - 인증  : Refresh Token (DB) -> Oath 관련 기능 / Spring Security 연구
-           - Mysql Replication (Master / Slave)
+           - Application.properties -> yml 변경
+           - 인증  : Refresh Token (DB) -> Oath 관련 기능 / Spring Security
+           - Mysql Replication (Master / Slave) / JPA 변경 (현재 Transaction 설정은 잘 되고 있다.)
            - 리펙토링 (구조 변화 - Web (API) / Share (BIZ) / Daemon (Stand Alone, Batch) -> Plugin..
-           - Api Doc ( Response 설정 + Api Document Config Upgrade )
+           - Swagger Api Doc ( Response 설정 개선 + Api Document Config Upgrade )
 
 배포
 2021-05-12 배포
