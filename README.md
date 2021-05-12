@@ -10,3 +10,4 @@ idus demo1
 4. DB 초기작업 진행
 <br>
 5. DB 설정 변경 /demo1/src/main/resources/application.properties
+6. <br>
