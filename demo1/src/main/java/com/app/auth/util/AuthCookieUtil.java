@@ -55,7 +55,9 @@ public class AuthCookieUtil {
         
         // AUTH_COOKIE_KEY 쿠키만 초기화
         System.out.println("METHOD:deleteAuthCookie");
-        Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, null) ;
+        Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, "") ;
+        authCookie.setPath("/"); // 모든 경로에서 접근 가능 하도록 설정
+        authCookie.setHttpOnly(false);
         authCookie.setMaxAge(0) ;
         response.addCookie(authCookie) ;
     }
