@@ -23,6 +23,9 @@ public interface Cust01Service  {
     */
     public Map<String, Object> custInfoList(Map<String, Object> inMap);
 
+    /* - 회원 쿠키 등록 및 삭제 */
+    public void updateCustCookie(Map<String, Object> inMap) throws Exception;
+
 
     
 }

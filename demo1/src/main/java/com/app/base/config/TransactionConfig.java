@@ -35,6 +35,8 @@ public class TransactionConfig {
 //	@Autowired
 //	private DataSourceTransactionManager transactionManager;
 
+	// 
+	// Transaction 설정
 	@Bean
 	public TransactionInterceptor txAdvice() {
 

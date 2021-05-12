@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+// 날짜 유틸
 public class DateUtil {
 
     public static long getTimeInMillis () {

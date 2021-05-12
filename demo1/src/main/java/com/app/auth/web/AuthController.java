@@ -5,11 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +17,15 @@ import com.app.auth.model.UserSignIn;
 import com.app.auth.model.UserSignUp;
 import com.app.auth.model.UserToken;
 import com.app.auth.util.AuthCookieUtil;
+import com.app.base.config.DemoServiceException;
 import com.app.base.util.CODE;
 import com.app.base.util.MapUtil;
 import com.app.cust.service.Cust01Service;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping(value="/auth")
@@ -43,6 +42,12 @@ public class AuthController {
     
     
     @ApiOperation(value = "회원가입", notes = "회원가입")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = AuthResMessage.auth_200),
+            @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+
+        })
     @PostMapping("/signUp")
     public @ResponseBody Map<String, Object> signUp(@RequestBody UserSignUp user) {
         Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -60,21 +65,18 @@ public class AuthController {
             // MapUtil.printLog(inMap);
             
             System.out.println(MapUtil.convertObjectToMap(user));
-            Map<String, Object> inMap = new HashMap<String, Object>();
-            rtnMap = cust01Service.signUp(MapUtil.convertObjectToMap(user));
+            Map<String, Object> inMap = MapUtil.convertObjectToMap(user);
+            rtnMap = cust01Service.signUp(inMap);
             
             
             rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("message"    , "회원가입이 완료되었습니다.");
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("result", CODE.ERROR);
-            rtnMap.put("message" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
+            rtnMap.put("message", "");
+        } catch (DemoServiceException e) {
             e.printStackTrace();
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace(); // 시스템 오류 개선사항 로깅해야됨.
             rtnMap.put("result", CODE.ERROR);
             rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);
             
@@ -85,6 +87,12 @@ public class AuthController {
     }
     
     @ApiOperation(value = "로그인", notes = "로그인")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = AuthResMessage.auth_200),
+            @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+
+        })
     @PostMapping("/signIn")
     public @ResponseBody Map<String, Object> signIn(
             HttpServletResponse response,
@@ -103,24 +111,24 @@ public class AuthController {
             inMap.put("email", user.getEmail() );
             inMap.put("pwd"  , user.getPwd()   );
             
-            rtnMap = cust01Service.signIn(inMap);
+            cust01Service.signIn(inMap);
+            
             System.out.println(response);
             UserToken userToken = new UserToken();
             userToken.setId("ZZ00000001");
             userToken.setEmail(user.getEmail());
             AuthCookieUtil.addAuthCookie(response, userToken);
             
-            rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("msg"    , "로그인성공.");
-
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
-            rtnMap.put("result", CODE.ERROR);
-            rtnMap.put("message" , re.getMessage());
-        } 
-        catch (Exception e) {
+            cust01Service.updateCustCookie(inMap);
             
+            rtnMap.put("result" , CODE.SUCCESS);
+            rtnMap.put("message", "");
+
+        } catch (DemoServiceException e) {
+            e.printStackTrace();
+            rtnMap.put("result", CODE.ERROR);
+            rtnMap.put("message" , e.getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
             rtnMap.put("result", CODE.ERROR);
             rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);
@@ -130,6 +138,12 @@ public class AuthController {
     }
     
     @ApiOperation(value = "로그아웃", notes = "로그아웃")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = AuthResMessage.auth_200),
+            @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
+            @ApiResponse(code = 500, message = "서버 오류"),
+
+        })
     @PostMapping("/logout")
     public @ResponseBody Map<String, Object> logout(
             HttpServletResponse response,
@@ -150,16 +164,13 @@ public class AuthController {
             AuthCookieUtil.deleteAuthCookie(response);
             
             rtnMap.put("result" , CODE.SUCCESS);
-            rtnMap.put("msg"    , "로그아웃성공.");
+            rtnMap.put("message", "");
 
-        } catch (RuntimeException re) {
-            System.out.println("@@ERROR@@" + re.getMessage());
-            re.printStackTrace();
+        } catch (DemoServiceException e) {
+            e.printStackTrace();
             rtnMap.put("result", CODE.ERROR);
-            rtnMap.put("message" , re.getMessage());
-        } 
-        catch (Exception e) {
-            
+            rtnMap.put("message" , e.getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
             rtnMap.put("result", CODE.ERROR);
             rtnMap.put("message" , CODE.SYSTEM_ERROR_MESSAGE);

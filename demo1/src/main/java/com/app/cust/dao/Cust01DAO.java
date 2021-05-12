@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.app.base.config.AbstractMapper;
 
-
-
 /**
  * 
  * @Description 
@@ -28,7 +26,7 @@ public class Cust01DAO extends AbstractMapper {
 
 	
 	/**
-	 * 고객정보 - 고객번호
+	 * 회원정보 - 회원번호
      * Customer info inquiry
      * 
 	 * @return List<Map<String, Object>>
@@ -38,7 +36,7 @@ public class Cust01DAO extends AbstractMapper {
     }
 	
 	/**
-     * 고객정보 - 전화번호
+     * 회원정보 - 전화번호
      * Customer info inquiry
      * 
      * @return List<Map<String, Object>>
@@ -48,7 +46,7 @@ public class Cust01DAO extends AbstractMapper {
     }
 	
 	/**
-     * 고객정보 - 이메일
+     * 회원정보 - 이메일
      * Customer info inquiry
      * 
      * @return List<Map<String, Object>>
@@ -57,14 +55,31 @@ public class Cust01DAO extends AbstractMapper {
 		return selectList("app.cust.Cust01.selectCustInfoByEmail", inMap);
     }
 
+	/**
+     * 회원목록
+     * Customer info inquiry List
+     * 
+     * @return List<Map<String, Object>>
+     */
     public List<Map<String, Object>> getCustInfoList(Map<String, Object> inMap) {
         return selectList("app.cust.Cust01.getCustInfoList", inMap);
     }
 
+    /**
+     * 회원목록시 조회되는 총 건수
+     * Customer info inquiry List Count
+     * 
+     * @return List<Map<String, Object>>
+     */
     public int countCustInfoList(Map<String, Object> inMap) {
         return selectOne("app.cust.Cust01.countCustInfoList", inMap);
     }
 
+    /**
+     * 회원가입시 이메일 중복 검사
+     * 
+     * @return List<Map<String, Object>>
+     */
     public int countCustInfoEmail(Map<String, Object> inMap) {
         return selectOne("app.cust.Cust01.countCustInfoEmail", inMap);
     }

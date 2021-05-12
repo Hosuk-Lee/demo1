@@ -17,7 +17,7 @@ WBS
              Database Select -> Column Camel Map List
            Springboot - Controller request
              Input Data json -> Map
-             service api POST 방식으로 통일
+             service api POST 방식으로 통일 -> POST와/ GET으로 나눔
 2021-05-05 설정완료 예정일. (단계말 점검)
            설정 Upgrade
              Camel
@@ -35,6 +35,12 @@ WBS
 
 테스트
 2021-05-09 테스트 및 미수행사항 점검
+
+2021-05-12 추후 Framwork 개선사항
+           - 인증  : Refresh Token (DB) -> Oath 관련 기능 / Spring Security 연구
+           - Mysql Replication (Master / Slave)
+           - 리펙토링 (구조 변화 - Web (API) / Share (BIZ) / Daemon (Stand Alone, Batch) -> Plugin..
+           - Api Doc ( Response 설정 + Api Document Config Upgrade )
 
 배포
 2021-05-12 배포

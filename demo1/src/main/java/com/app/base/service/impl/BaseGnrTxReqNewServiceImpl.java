@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import com.app.base.config.DemoServiceException;
 import com.app.base.service.BaseGnrTxReqNewService;
 import com.app.base.util.StringUtil;
 import com.app.table.base.dao.TbBaseKeyMakeDAO;
@@ -70,12 +71,12 @@ public class BaseGnrTxReqNewServiceImpl implements BaseGnrTxReqNewService {
 	private long getSerNo(String keyCd, String keyTxt, String tblNm) throws Exception {
 		long rtnSerNo = 1L;
 		if (StringUtil.isEmpty(keyCd))
-			throw new RuntimeException("KEY ID 누락" );
+			throw new DemoServiceException("KEY ID 누락" );
 		if (StringUtil.isEmpty(keyTxt))
-		    throw new RuntimeException("KEY 구분값 누락" );
+		    throw new DemoServiceException("KEY 구분값 누락" );
 
 //		if (StringUtil.isEmpty(tblNm))
-//			throw runtimeException("테이블명" );
+//			throw DemoServiceException("테이블명" );
 
 		TbBaseKeyMakeVO inVo = new TbBaseKeyMakeVO();
 		inVo.setKeyCd(keyCd);

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.app.base.config.DemoServiceException;
 import com.app.base.service.BaseGnrTxReqNewService;
 import com.app.base.util.CryptoUtil;
 import com.app.base.util.MapUtil;
@@ -40,19 +41,19 @@ public class Cust01ServiceImpl  implements Cust01Service{
         
         // 입력 필수값 검증 START
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("nm")) ) )  {
-            throw new RuntimeException("이름을 입력하세요.");
+            throw new DemoServiceException("이름을 입력하세요.");
         }
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("alias")) ) )  {
-            throw new RuntimeException("별명을 입력하세요.");
+            throw new DemoServiceException("별명을 입력하세요.");
         }
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("pwd")) ) )  {
-            throw new RuntimeException("비밀번호를 입력하세요.");
+            throw new DemoServiceException("비밀번호를 입력하세요.");
         }
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("telNo")) ) )  {
-            throw new RuntimeException("전화번호를 입력하세요.");
+            throw new DemoServiceException("전화번호를 입력하세요.");
         }
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("email")) ) )  {
-            throw new RuntimeException("이메일을 입력하세요.");
+            throw new DemoServiceException("이메일을 입력하세요.");
         }
         // 입력 필수값 검증 END
         
@@ -69,34 +70,34 @@ public class Cust01ServiceImpl  implements Cust01Service{
         // 이름 검증
         System.out.println("@@@@NM"+nm);
         if ( !CustUtil.nmCheck(nm ) ) {
-            throw new RuntimeException("이름 정합성 오류."); 
+            throw new DemoServiceException("이름 정합성 오류."); 
         }
         // 별명 검증
         if ( !CustUtil.aliasCheck(alias) ) {
-            throw new RuntimeException("별명 정합성 오류."); 
+            throw new DemoServiceException("별명 정합성 오류."); 
         }
         // 패스워드 검증
         if ( !CustUtil.passwdCheck( pwd ) ) {
-            throw new RuntimeException("비밀번호 정합성 오류."); 
+            throw new DemoServiceException("비밀번호 정합성 오류."); 
         }
         // 전화번호 검증
         if ( !CustUtil.telNoCheck( telNo ) ) {
-            throw new RuntimeException("전화번호 정합성 오류."); 
+            throw new DemoServiceException("전화번호 정합성 오류."); 
         }
         // 이메일 검증
         if ( !CustUtil.emailCheck( email ) ) {
-            throw new RuntimeException("이메일 정합성 오류."); 
+            throw new DemoServiceException("이메일 정합성 오류."); 
         }
         // 성별 검증
         if ( !CustUtil.sexCheck( sex ) ) {
-            throw new RuntimeException("성별 정합성 오류."); 
+            throw new DemoServiceException("성별 정합성 오류."); 
         }
         // 정합성 검증 END
         /*------------------------------------------------------------------------------*/
         // 이메일 중복검사
         int emailDupCheck = cust01DAO.countCustInfoEmail(inMap);
         if ( emailDupCheck > 0 ) {
-            throw new RuntimeException("가입된 이메일 존재.");
+            throw new DemoServiceException("가입된 이메일 존재.");
         }
         
         /*------------------------------------------------------------------------------*/
@@ -136,10 +137,10 @@ public class Cust01ServiceImpl  implements Cust01Service{
         
         // 입력 필수값 검증 START
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("pwd")) ) )  {
-            throw new RuntimeException("비밀번호를 입력하세요.");
+            throw new DemoServiceException("비밀번호를 입력하세요.");
         }
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("email")) ) )  {
-            throw new RuntimeException("이메일을 입력하세요.");
+            throw new DemoServiceException("이메일을 입력하세요.");
         }
         // 입력 필수값 검증 END
         
@@ -149,11 +150,11 @@ public class Cust01ServiceImpl  implements Cust01Service{
         /*------------------------------------------------------------------------------*/
         // 패스워드 검증
         if ( !CustUtil.passwdCheck( pwd ) ) {
-            throw new RuntimeException("비밀번호 정합성 오류."); 
+            throw new DemoServiceException("비밀번호 정합성 오류."); 
         }
         // 이메일 검증
         if ( !CustUtil.emailCheck( email ) ) {
-            throw new RuntimeException("이메일 정합성 오류."); 
+            throw new DemoServiceException("이메일 정합성 오류."); 
         }
         /*------------------------------------------------------------------------------*/
         
@@ -163,7 +164,7 @@ public class Cust01ServiceImpl  implements Cust01Service{
         // Email로 고객번호 SELECT
         List<Map<String, Object>> rtnMapList = cust01DAO.selectCustInfoByEmail(inMap);
         if ( rtnMapList == null || rtnMapList.size() == 0 ) {
-            throw new RuntimeException("등록되어 있지 않은 (ID)이메일주소 입니다.");
+            throw new DemoServiceException("등록되어 있지 않은 (ID)이메일주소 입니다.");
         }
         
         // 고객기본 원장 SELECT
@@ -177,10 +178,9 @@ public class Cust01ServiceImpl  implements Cust01Service{
         System.out.println("S."+custBaseVO.getPwd());
         System.out.println("I."+encPwd);
         if ( ! encPwd.equals(custBaseVO.getPwd()) ) {
-            throw new RuntimeException("비밀번호를 확인하여 주세요.");
+            throw new DemoServiceException("비밀번호를 확인하여 주세요.");
         }
         
-        // 인증서..?? 토큰..??
         return rtnMap;
     }
 
@@ -200,19 +200,19 @@ public class Cust01ServiceImpl  implements Cust01Service{
         
         // 입력 필수값 검증 START
         if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("type")) ) )  {
-            throw new RuntimeException("비밀번호를 입력하세요.");
+            throw new DemoServiceException("조회타입을 입력하세요.");
         }
         
         /* ---------------------------------------------------------------------*/
         if ( "telNo".equals( inMap.get("type") ) )  {
             if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("telNo")) ) )  {
-                throw new RuntimeException("전화번호를 입력하세요.");
+                throw new DemoServiceException("전화번호를 입력하세요.");
             }
         }
         else
         if ( "email".equals( inMap.get("type") ) )  {
             if ( StringUtil.isEmpty( MapUtil.getNvlString( inMap.get("email")) ) )  {
-                throw new RuntimeException("이메일을 입력하세요.");
+                throw new DemoServiceException("이메일을 입력하세요.");
             }
         }
         
@@ -232,7 +232,7 @@ public class Cust01ServiceImpl  implements Cust01Service{
             rtnMapList = cust01DAO.selectCustInfoByEmail(searchMap);
         }
         else {
-            throw new RuntimeException("System Code Error 조회구분 오류.");
+            throw new DemoServiceException("System Code Error 조회구분 오류.");
         }
         
         if ( rtnMapList == null || rtnMapList.size() == 0 ) {
@@ -309,7 +309,7 @@ public class Cust01ServiceImpl  implements Cust01Service{
             System.out.println("getCustInfoList:" + rtnMapList.size());
             if ( rtnMapList.size() == 0 ) {
                 // @TODO 추후 개선.
-                throw new RuntimeException("API Rule 위배. 비정상적인 조회접근");
+                throw new DemoServiceException("API Rule 위배. 비정상적인 조회접근");
             }
             rtnMap.put("elements", rtnMapList);
             rtnMap.put("total_count", ordCount);
@@ -327,6 +327,23 @@ public class Cust01ServiceImpl  implements Cust01Service{
             
         }
         return rtnMap;
+    }
+
+    @Override
+    public void updateCustCookie(Map<String, Object> inMap) throws Exception {
+        
+        List<Map<String, Object>> rtnMapList = cust01DAO.selectCustInfoByEmail(inMap);
+        if ( rtnMapList == null || rtnMapList.size() == 0 ) {
+            throw new DemoServiceException("등록되어 있지 않은 (ID)이메일주소 입니다.");
+        }
+        
+        // 고객기본 원장 SELECT
+        // VO Setting Start
+        TbCustBaseVO custBaseVO = new TbCustBaseVO();
+        custBaseVO.setCustNo(MapUtil.getNvlString(rtnMapList.get(0).get("custNo")));
+        custBaseVO = tbCustBaseDAO.doSelectForUpdate(custBaseVO);
+        
+        // custBaseVO.set
     }
 
     

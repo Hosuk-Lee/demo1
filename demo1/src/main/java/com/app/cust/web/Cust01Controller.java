@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.base.config.DemoServiceException;
 import com.app.base.util.CODE;
 import com.app.base.util.MapUtil;
 import com.app.cust.service.Cust01Service;
@@ -75,9 +76,7 @@ public class Cust01Controller {
             inMap.put("telNo", telNo   );
             
             rtnMap = cust01Service.getCustInfo(inMap);
-        } 
-        catch (Exception e) {
-            
+        } catch (Exception e) {
             e.printStackTrace();
             rtnMap.put("resultCode", CODE.ERROR);
             rtnMap.put("resultMsg" , CODE.SYSTEM_ERROR_MESSAGE);
@@ -119,8 +118,7 @@ public class Cust01Controller {
             inMap.put("email", email   );
             
             rtnMap = cust01Service.getCustInfo(inMap);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             
             e.printStackTrace(); // 모니터링을 위한 System Error LOGGING [DB or FILE] 
             

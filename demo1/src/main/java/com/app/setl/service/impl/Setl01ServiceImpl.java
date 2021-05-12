@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.app.base.config.DemoServiceException;
 import com.app.base.util.MapUtil;
 import com.app.base.util.StringUtil;
 import com.app.setl.dao.Setl01DAO;
@@ -74,7 +75,7 @@ public class Setl01ServiceImpl  implements Setl01Service{
             System.out.println("countCustOrdList" + rtnMapList.size());
             if ( rtnMapList.size() == 0 ) {
                 // @TODO 추후 개선.
-                throw new RuntimeException("API Rule 위배. 비정상적인 조회접근");
+                throw new DemoServiceException("API Rule 위배. 비정상적인 조회접근");
             }
             rtnMap.put("elements", rtnMapList);
             rtnMap.put("total_count", ordCount);

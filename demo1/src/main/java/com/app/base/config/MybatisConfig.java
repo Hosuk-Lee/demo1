@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class MybatisConfig {
     
+    // DB 접속정보는 application.properties에 있다.
 	/*
     @Bean
     public DataSource customDataSource() {
@@ -28,6 +29,7 @@ public class MybatisConfig {
     }
     */
     
+    // 추가 설정이 필요한 config.xml 설정
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource)throws Exception{
             SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();

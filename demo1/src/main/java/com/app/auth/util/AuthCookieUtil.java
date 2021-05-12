@@ -83,49 +83,49 @@ public class AuthCookieUtil {
 
         try {
         
-        String jwt = "";
-        Cookie[] cookies = request.getCookies();
-        
-        // 쿠키목록 중 인증서 데이터 찾기
-        if ( cookies == null ) {
-            throw new Exception("Cookie 없음 오류");
-        } 
-        
-        for(Cookie cookie : cookies) {
-            if(cookie.getName().equals(AUTH_COOKIE_KEY)){
-                jwt = cookie.getValue();
-                // System.out.println(cookie.getMaxAge());
-                break;
+            String jwt = "";
+            Cookie[] cookies = request.getCookies();
+            
+            // 쿠키목록 중 인증서 데이터 찾기
+            if ( cookies == null ) {
+                throw new Exception("Cookie 없음 오류");
+            } 
+            
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(AUTH_COOKIE_KEY)){
+                    jwt = cookie.getValue();
+                    // System.out.println(cookie.getMaxAge());
+                    break;
+                }
             }
-        }
-        
-        if ( jwt == null ) throw new Exception("Tocken 없음 오류");
-        
-        String data[] = jwt.split("\\.");
-        System.out.println("jwt cookie data:"+jwt);
-        // System.out.println(jwt.split(".").length);
-        // System.out.println("1:" + data[0]);
-        // System.out.println("2:" + data[1]);
-        // System.out.println("3:" + data[2]);
-        
-        if ( validAuthCookie(jwt) == false ) throw new Exception("Tocken 검증 오류");
-        
-        System.out.println(decode(data[1]));
-        
-        ObjectMapper objectMapper = new ObjectMapper();
-        user = objectMapper.readValue(decode(data[1]), UserToken.class);
-        
-//        Map<String, String> map = mapper.readValue(json, Map.class);
-//        Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
-        
-        System.out.println(user.getExpires_at());
-        System.out.println(user.getIssued_at());
-        
-        System.out.println("현재접속시간 : " + DateUtil.millisToDate(DateUtil.getTimeInMillis()));
-        System.out.println("토큰만료시간 : " + DateUtil.millisToDate(StringUtil.parseLong(user.getExpires_at())));
-        // 현재시간보다 토큰만료시간이 지나면 오류
-        if ( DateUtil.getTimeInMillis() > StringUtil.parseLong(user.getExpires_at()) )
-            throw new Exception("Tocken 유효기간 만료");
+            
+            if ( jwt == null ) throw new Exception("Tocken 없음 오류");
+            
+            String data[] = jwt.split("\\.");
+            System.out.println("jwt cookie data:"+jwt);
+            // System.out.println(jwt.split(".").length);
+            // System.out.println("1:" + data[0]);
+            // System.out.println("2:" + data[1]);
+            // System.out.println("3:" + data[2]);
+            
+            if ( validAuthCookie(jwt) == false ) throw new Exception("Tocken 검증 오류");
+            
+            System.out.println(decode(data[1]));
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            user = objectMapper.readValue(decode(data[1]), UserToken.class);
+            
+    //        Map<String, String> map = mapper.readValue(json, Map.class);
+    //        Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
+            
+            System.out.println(user.getExpires_at());
+            System.out.println(user.getIssued_at());
+            
+            System.out.println("현재접속시간 : " + DateUtil.millisToDate(DateUtil.getTimeInMillis()));
+            System.out.println("토큰만료시간 : " + DateUtil.millisToDate(StringUtil.parseLong(user.getExpires_at())));
+            // 현재시간보다 토큰만료시간이 지나면 오류
+            if ( DateUtil.getTimeInMillis() > StringUtil.parseLong(user.getExpires_at()) )
+                throw new Exception("Tocken 유효기간 만료");
         
         } catch (Exception e) {
             // TODO Auto-generated catch block

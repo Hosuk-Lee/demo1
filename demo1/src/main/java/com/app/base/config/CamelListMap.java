@@ -2,6 +2,11 @@ package com.app.base.config;
 
 import org.apache.commons.collections4.map.ListOrderedMap;
 
+
+/**
+ *  CamelListMap Class는 sql-mapper-config.xml 에 typeAliases 참고ㄴ
+ *  alias로 설정한 listMap은 mybatis sql 에서 resultType="listMap" 사용시 반환
+ *  */
 public class CamelListMap extends ListOrderedMap<Object, Object> {
 
 	private static final long serialVersionUID = 1L;
