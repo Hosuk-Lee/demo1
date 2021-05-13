@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AuthCookieUtil {
     
     // Tocken 만료시간
-    public static final int LIMIT_MINUTE = 5 * 60; // 5분
+    public static final int SECOND = 60;
+    public static final int LIMIT_MINUTE = 5; // 5분
     
     public static final String AUTH_COOKIE_KEY = "d-auth";
     // hash 알고리즘 선택
@@ -37,13 +38,13 @@ public class AuthCookieUtil {
         
         
         user.setIssued_at ( String.valueOf( DateUtil.getTimeInMillis() ));
-        user.setExpires_at( String.valueOf( DateUtil.addTimeInMillis(LIMIT_MINUTE) ));
+        user.setExpires_at( String.valueOf( DateUtil.addTimeInMillis(LIMIT_MINUTE * SECOND ) ));
         
         String jwtString = makeJWT(user);
         Cookie authCookie = new Cookie(AUTH_COOKIE_KEY, jwtString);
         
         
-        authCookie.setMaxAge(LIMIT_MINUTE);
+        authCookie.setMaxAge(LIMIT_MINUTE * SECOND);
         authCookie.setPath("/"); // 모든 경로에서 접근 가능 하도록 설정
         authCookie.setHttpOnly(true);
         

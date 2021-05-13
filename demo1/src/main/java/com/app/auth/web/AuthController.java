@@ -41,7 +41,8 @@ public class AuthController {
     private Cust01Service cust01Service;
     
     
-    @ApiOperation(value = "회원가입", notes = "회원가입")
+    @ApiOperation(value = "회원가입"
+                , notes = "회원가입")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = AuthResMessage.auth_200),
             @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
@@ -86,7 +87,9 @@ public class AuthController {
 
     }
     
-    @ApiOperation(value = "로그인", notes = "로그인")
+    @ApiOperation(value = "로그인"
+                , notes = "Api를 사용 할 수 있는 인증 토큰을 발급받습니다. \n"
+                        + "토큰의 유효시간은 " + AuthCookieUtil.LIMIT_MINUTE + "분 이며, Cookie에 저장됩니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = AuthResMessage.auth_200),
             @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
@@ -137,7 +140,9 @@ public class AuthController {
         return rtnMap;
     }
     
-    @ApiOperation(value = "로그아웃", notes = "로그아웃")
+    @ApiOperation(value = "로그아웃"
+                , notes = "발급받은 토큰이 삭제되며 로그아웃 됩니다. \n"
+                        + "Parameter로 설정한 email에대해 나중에 인증강화를 위해 Setting 해줍니다.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = AuthResMessage.auth_200),
             @ApiResponse(code = 401, message = "인증 오류 (로그인 만료, 토큰 인증오류 등)"),
