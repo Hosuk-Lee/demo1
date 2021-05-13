@@ -90,7 +90,7 @@
      -->
      <select id="getCustInfoList" parameterType="java.util.Map" resultType="listMap">
          SELECT CONCAT(RN) AS RN,
-                CUST_NO, CUST_GB, NM, ALIAS, TEL_NO, EMAIL, SEX, ORD_NO, PDT_NM, KST_STL_DT, KST_STL_TM
+                CUST_NO, CUST_GB, NM, ALIAS, TEL_NO, EMAIL, SEX, LAST_ORD_NO, PDT_NM, KST_STL_DT, KST_STL_TM
          FROM (
             SELECT 
                 <![CDATA[
@@ -101,11 +101,15 @@
                 ,A.ALIAS
                 ,A.TEL_NO
                 ,A.EMAIL
-                ,A.SEX
-                ,B.ORD_NO
-                ,B.PDT_NM
-                ,DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%Y-%m-%d') KST_STL_DT
-                ,DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%H:%i:%s') KST_STL_TM
+                ,CASE A.SEX
+                    WHEN 'M'  THEN '남성'
+                    WHEN 'W'  THEN '여성'
+                    WHEN ''   THEN ''
+                END AS SEX
+                ,IFNULL(B.ORD_NO,'') AS LAST_ORD_NO
+                ,IFNULL(B.PDT_NM,'') AS PDT_NM
+                ,IFNULL(DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%Y-%m-%d'),'') AS KST_STL_DT
+                ,IFNULL(DATE_FORMAT(CONVERT_TZ(B.STL_DATE,'+0:00','+9:00'),'%H:%i:%s'),'') AS KST_STL_TM
                 FROM TB_CUST_BASE A
                 LEFT OUTER JOIN 
                     (
