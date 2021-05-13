@@ -113,16 +113,16 @@ public class AuthCookieUtil {
             
             if ( validAuthCookie(jwt) == false ) throw new Exception("Tocken 검증 오류");
             
-            System.out.println(decode(data[1]));
+            // System.out.println(decode(data[1]));
             
             ObjectMapper objectMapper = new ObjectMapper();
             user = objectMapper.readValue(decode(data[1]), UserToken.class);
             
-    //        Map<String, String> map = mapper.readValue(json, Map.class);
-    //        Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
+            // Map<String, String> map = mapper.readValue(json, Map.class);
+            // Map<String, Object> map = objectMapper.convertValue(decode(data[1]), Map.class);
             
-            System.out.println(user.getExpires_at());
-            System.out.println(user.getIssued_at());
+            // System.out.println(user.getExpires_at());
+            // System.out.println(user.getIssued_at());
             
             System.out.println("현재접속시간 : " + DateUtil.millisToDate(DateUtil.getTimeInMillis()));
             System.out.println("토큰만료시간 : " + DateUtil.millisToDate(StringUtil.parseLong(user.getExpires_at())));

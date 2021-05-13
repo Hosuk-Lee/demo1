@@ -20,7 +20,7 @@ public class CryptoUtil {
             sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
         
-        System.out.println("sha256:" + sb.toString().length() + ":" + sb.toString());
+        // System.out.println("sha256:" + sb.toString().length() + ":" + sb.toString());
         
         return sb.toString();
     }
